@@ -11,6 +11,8 @@ import aehmc.integrators as integrators
 import aehmc.metrics as metrics
 import aehmc.trajectory as trajectory
 
+from . import KernelType
+
 
 def new_state(
     q: TensorVariable, logprob_fn: Callable
@@ -40,7 +42,7 @@ def new_kernel(
     srng: RandomStream,
     logprob_fn: Callable,
     divergence_threshold: int = 1000,
-) -> Callable:
+) -> KernelType:
     """Build a HMC kernel.
 
     Parameters
@@ -76,9 +78,15 @@ def new_kernel(
         potential_energy_grad: TensorVariable,
         step_size: TensorVariable,
         inverse_mass_matrix: TensorVariable,
-        num_integration_steps: int,
+        num_integration_steps: TensorVariable,
     ) -> Tuple[
-        Tuple[TensorVariable, TensorVariable, TensorVariable, TensorVariable, bool],
+        Tuple[
+            TensorVariable,
+            TensorVariable,
+            TensorVariable,
+            TensorVariable,
+            TensorVariable,
+        ],
         Dict,
     ]:
         """Perform a single step of the HMC algorithm.

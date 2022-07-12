@@ -1,4 +1,4 @@
-from typing import Callable
+from typing import Callable, Dict, Tuple
 
 import aesara.tensor as at
 import numpy as np
@@ -9,6 +9,8 @@ from aehmc import hmc, integrators, metrics
 from aehmc.termination import iterative_uturn
 from aehmc.trajectory import dynamic_integration, multiplicative_expansion
 
+from . import KernelType
+
 new_state = hmc.new_state
 
 
@@ -17,7 +19,7 @@ def new_kernel(
     logprob_fn: Callable[[TensorVariable], TensorVariable],
     max_num_expansions: int = 10,
     divergence_threshold: int = 1000,
-) -> Callable:
+) -> KernelType:
     """Build an iterative NUTS kernel.
 
     Parameters
@@ -57,7 +59,18 @@ def new_kernel(
         potential_energy_grad: TensorVariable,
         step_size: TensorVariable,
         inverse_mass_matrix: TensorVariable,
-    ):
+    ) -> Tuple[
+        Tuple[
+            TensorVariable,
+            TensorVariable,
+            TensorVariable,
+            TensorVariable,
+            TensorVariable,
+            TensorVariable,
+            TensorVariable,
+        ],
+        Dict,
+    ]:
         """Use the NUTS algorithm to propose a new state.
 
         Parameters
