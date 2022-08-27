@@ -13,7 +13,7 @@ ProposalStateType = Tuple[
 
 
 def proposal_generator(kinetic_energy: Callable, divergence_threshold: float):
-    def update(initial_energy, state):
+    def update(initial_energy: float, state: Tuple):
         """Generate a new proposal from a trajectory state.
 
         The trajectory state records information about the position in the state
