@@ -42,12 +42,11 @@ def proposal_generator(kinetic_energy: Callable, divergence_threshold: float):
         delta_energy = at.where(at.isnan(delta_energy), -np.inf, delta_energy)
         is_transition_divergent = at.abs(delta_energy) > divergence_threshold
 
+        # The weigh of the new proposal is equal to H_0 - H(q_new)
         weight = delta_energy
-        log_p_accept = at.where(
-            at.gt(delta_energy, 0),
-            at.as_tensor(0, dtype=delta_energy.dtype),
-            delta_energy,
-        )
+
+        # The acceptance statistic is equal to min(e^(H_0 - H(q_new)), 1)
+        log_p_accept = at.minimum(delta_energy, 0)
 
         return (state, new_energy, weight, log_p_accept), is_transition_divergent
 
